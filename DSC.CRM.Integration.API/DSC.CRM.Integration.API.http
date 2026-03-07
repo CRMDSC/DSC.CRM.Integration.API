@@ -1,0 +1,6 @@
+@DSC.CRM.Integration.API_HostAddress = http://localhost:5171
+
+GET {{DSC.CRM.Integration.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
