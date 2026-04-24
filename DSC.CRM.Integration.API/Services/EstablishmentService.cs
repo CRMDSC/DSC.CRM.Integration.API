@@ -18,88 +18,172 @@ namespace DSC.CRM.Integration.API.Services
         {
             var service = _crmConnector.GetCRMService();
 
-            // ===============================
-            // Create Establishment Request
-            // ===============================
-
             Entity establishment = new Entity("dsc_establishmentrequest");
 
-            establishment["dsc_newcolumn"] = request.TitleEn;
-            establishment["dsc_titlearabic"] = request.TitleAr;
-            establishment["dsc_descriptionenglish"] = request.DescriptionEn;
-            establishment["dsc_descriptionarabic"] = request.DescriptionAr;
+            // ================= BASIC =================
+            establishment["dsc_newcolumn"] = request.TitleEn ?? "";
+            establishment["dsc_titlearabic"] = request.TitleAr ?? "";
+            establishment["dsc_descriptionenglish"] = request.DescriptionEn ?? "";
+            establishment["dsc_descriptionarabic"] = request.DescriptionAr ?? "";
+            establishment["dsc_address"] = request.Address ?? "";
 
-            establishment["dsc_address"] = request.Address;
-            //establishment["dsc_latitude"] = Convert.ToDouble(request.Lat);
-            //establishment["dsc_longitude"] = Convert.ToDouble(request.Lng);
+            establishment["dsc_makaninumber"] = request.MakaniNumber ?? "";
+            establishment["dsc_pobox"] = request.PoBox ?? "";
 
-            establishment["dsc_makaninumber"] = request.MakaniNumber;
-            establishment["dsc_pobox"] = request.PoBox;
+            establishment["dsc_tradelicensenumber"] = request.TradeLicense ?? "";
 
-            establishment["dsc_tradelicensenumber"] = request.TradeLicense;
-            establishment["dsc_tradelicensestartdate"] = request.TradeLicenseStartDate;
-            establishment["dsc_tradelicenseexpirydate"] = request.TradeLicenseExpiryDate;
+            //if (request.TradeLicenseStartDate != null)
+            //    establishment["dsc_tradelicensestartdate"] = request.TradeLicenseStartDate;
 
-            establishment["dsc_establishmentphoto"] = request.EstablishmentPhoto;
+            //if (request.TradeLicenseExpiryDate != null)
+            //    establishment["dsc_tradelicenseexpirydate"] = request.TradeLicenseExpiryDate;
 
-            //// Latitude
-            //if (!string.IsNullOrEmpty(request.Lat))
-            //{
-            //    establishment["dsc_latitude"] = request.Lat;
-            //}
+            establishment["dsc_establishmentphoto"] = request.EstablishmentPhoto ?? "";
 
-            //// Longitude
-            //if (!string.IsNullOrEmpty(request.Lng))
-            //{
-            //    establishment["dsc_longitude"] = request.Lng;
-            //}
+            // ================= LOCATION =================
+            if (request.Lat != 0)
+                establishment["dsc_latitude"] = request.Lat.ToString();
 
-            //// Country ID (TEXT)
-            //if (!string.IsNullOrEmpty(request.CountryID))
-            //{
-            //    establishment["dsc_countryid"] = request.CountryID;
-            //}
+            if (request.Lng != 0)
+                establishment["dsc_longitude"] = request.Lng.ToString();
 
-            //// Total Staff (WHOLE NUMBER)
-            //if (request.TotalStaff.HasValue)
-            //{
-            //    establishment["dsc_totalstaff"] = request.TotalStaff.Value;
-            //}
+            // ================= NUMBERS =================
+            //if (request.TotalStaff > 0)
+            //    establishment["dsc_totalstaff"] = request.TotalStaff;
 
-            // Private Contact
-            establishment["dsc_privateemail"] = request.EmailPrivate;
-            establishment["dsc_privatephone"] = request.PhonePrivate;
+            //if (request.CountryID > 0)
+            //    establishment["dsc_countryid"] = request.CountryID.ToString();
 
-            // Tags
-            establishment["dsc_tags"] = request.Tags;
+            // ================= PRIVATE =================
+            establishment["dsc_privateemail"] = request.EmailPrivate ?? "";
+            establishment["dsc_privatephone"] = request.PhonePrivate ?? "";
 
-            // Timestamp
-            establishment["dsc_timestamp"] = request.TimeStamp;
+            // ================= GENDER =================
+            switch (request.Gender)
+            {
+                case ProjectConstants.Gender.Male:
+                    establishment["dsc_gender"] = new OptionSetValue(ProjectConstants.Gender.Male);
+                    break;
 
-            // Contact Details
+                case ProjectConstants.Gender.Female:
+                    establishment["dsc_gender"] = new OptionSetValue(ProjectConstants.Gender.Female);
+                    break;
+
+                case ProjectConstants.Gender.Both:
+                    establishment["dsc_gender"] = new OptionSetValue(ProjectConstants.Gender.Both);
+                    break;
+
+                case ProjectConstants.Gender.Kids:
+                    establishment["dsc_gender"] = new OptionSetValue(ProjectConstants.Gender.Kids);
+                    break;
+
+                default:
+                    establishment["dsc_gender"] = new OptionSetValue(ProjectConstants.Gender.Male);
+                    break;
+            }
+
+            // ================= ESTABLISHMENT TYPE =================
+            switch (request.EstablishmentType)
+            {
+                case ProjectConstants.EstablishmentType.SportServiceCompany:
+                    establishment["dsc_establishmenttype"] = new OptionSetValue(ProjectConstants.EstablishmentType.SportServiceCompany);
+                    break;
+
+                case ProjectConstants.EstablishmentType.PrivateSportsClub:
+                    establishment["dsc_establishmenttype"] = new OptionSetValue(ProjectConstants.EstablishmentType.PrivateSportsClub);
+                    break;
+
+                case ProjectConstants.EstablishmentType.SportsCompany:
+                    establishment["dsc_establishmenttype"] = new OptionSetValue(ProjectConstants.EstablishmentType.SportsCompany);
+                    break;
+
+                case ProjectConstants.EstablishmentType.SportsAcademy:
+                    establishment["dsc_establishmenttype"] = new OptionSetValue(ProjectConstants.EstablishmentType.SportsAcademy);
+                    break;
+
+                case ProjectConstants.EstablishmentType.FitnessCenter:
+                    establishment["dsc_establishmenttype"] = new OptionSetValue(ProjectConstants.EstablishmentType.FitnessCenter);
+                    break;
+
+                case ProjectConstants.EstablishmentType.ESport:
+                    establishment["dsc_establishmenttype"] = new OptionSetValue(ProjectConstants.EstablishmentType.ESport);
+                    break;
+
+                case ProjectConstants.EstablishmentType.EventOrganizer:
+                    establishment["dsc_establishmenttype"] = new OptionSetValue(ProjectConstants.EstablishmentType.EventOrganizer);
+                    break;
+
+                case ProjectConstants.EstablishmentType.PrivateCompany:
+                    establishment["dsc_establishmenttype"] = new OptionSetValue(ProjectConstants.EstablishmentType.PrivateCompany);
+                    break;
+
+                case ProjectConstants.EstablishmentType.PublicCompany:
+                    establishment["dsc_establishmenttype"] = new OptionSetValue(ProjectConstants.EstablishmentType.PublicCompany);
+                    break;
+
+                case ProjectConstants.EstablishmentType.School:
+                    establishment["dsc_establishmenttype"] = new OptionSetValue(ProjectConstants.EstablishmentType.School);
+                    break;
+
+                case ProjectConstants.EstablishmentType.University:
+                    establishment["dsc_establishmenttype"] = new OptionSetValue(ProjectConstants.EstablishmentType.University);
+                    break;
+
+                default:
+                    establishment["dsc_establishmenttype"] = new OptionSetValue(ProjectConstants.EstablishmentType.SportServiceCompany);
+                    break;
+            }
+
+            // ================= LICENSE SOURCE =================
+            switch (request.LicenseSourceID)
+            {
+                case ProjectConstants.LicenseSource.DET:
+                    establishment["dsc_licensesource"] = new OptionSetValue(ProjectConstants.LicenseSource.DET);
+                    break;
+
+                case ProjectConstants.LicenseSource.SharjahFreezone:
+                    establishment["dsc_licensesource"] = new OptionSetValue(ProjectConstants.LicenseSource.SharjahFreezone);
+                    break;
+
+                case ProjectConstants.LicenseSource.DubaiFreezone:
+                    establishment["dsc_licensesource"] = new OptionSetValue(ProjectConstants.LicenseSource.DubaiFreezone);
+                    break;
+
+                case ProjectConstants.LicenseSource.InitialApproval:
+                    establishment["dsc_licensesource"] = new OptionSetValue(ProjectConstants.LicenseSource.InitialApproval);
+                    break;
+
+                default:
+                    establishment["dsc_licensesource"] = new OptionSetValue(ProjectConstants.LicenseSource.Default);
+                    break;
+            }
+
+            // ================= CONTACT =================
             if (request.ContactDetails != null)
             {
-                establishment["dsc_contactphone"] = request.ContactDetails.Phone;
-                establishment["dsc_contactemail"] = request.ContactDetails.Email;
-                establishment["dsc_contactwebsite"] = request.ContactDetails.Website;
+                establishment["dsc_contactphone"] = request.ContactDetails.Phone ?? "";
+                establishment["dsc_contactemail"] = request.ContactDetails.Email ?? "";
+                establishment["dsc_contactwebsite"] = request.ContactDetails.Website ?? "";
             }
 
             Guid establishmentId = service.Create(establishment);
 
-            // ===============================
-            // Create Establishment Owners
-            // ===============================
-
+            // ================= OWNERS =================
             if (request.EstablishmentOwners != null)
             {
                 foreach (var owner in request.EstablishmentOwners)
                 {
                     Entity ownerEntity = new Entity("dsc_establishmentowner");
 
-                    ownerEntity["dsc_ownernamer"] = owner.Name;
-                    ownerEntity["dsc_nationality"] = owner.Nationality;
-                    ownerEntity["dsc_phone"] = owner.Phone;
-                    ownerEntity["dsc_email"] = owner.Email;
+                    ownerEntity["dsc_ownernamer"] = owner.Name ?? "";
+                    ownerEntity["dsc_percentageowned"] = owner.PercentageOwned;
+
+                    // 👇 FIX (from contactDetails)
+                    if (owner.ContactDetails != null)
+                    {
+                        ownerEntity["dsc_email"] = owner.ContactDetails.Email ?? "";
+                        ownerEntity["dsc_phone"] = owner.ContactDetails.Phone ?? "";
+                    }
 
                     ownerEntity["dsc_establishmentrequest"] =
                         new EntityReference("dsc_establishmentrequest", establishmentId);
@@ -107,20 +191,24 @@ namespace DSC.CRM.Integration.API.Services
                     service.Create(ownerEntity);
                 }
             }
-            //
-            // ===============================
-            // Create Establishment Managers
-            // ===============================
-            //
+
+            // ================= MANAGERS =================
             if (request.EstablishmentManagers != null)
             {
                 foreach (var manager in request.EstablishmentManagers)
                 {
                     Entity managerEntity = new Entity("dsc_establishmentmanager1");
 
-                    managerEntity["dsc_managername"] = manager.Name;
-                    managerEntity["dsc_phone"] = manager.Phone;
-                    managerEntity["dsc_email"] = manager.Email;
+                    managerEntity["dsc_managername"] = manager.Name ?? "";
+
+                    // 👇 FIX
+                    if (manager.ContactDetails != null)
+                    {
+                        managerEntity["dsc_email"] = manager.ContactDetails.Email ?? "";
+                        managerEntity["dsc_phone"] = manager.ContactDetails.Phone ?? "";
+                    }
+
+                    managerEntity["dsc_countryid"] = manager.CountryID;
 
                     managerEntity["dsc_establishmentrequest"] =
                         new EntityReference("dsc_establishmentrequest", establishmentId);

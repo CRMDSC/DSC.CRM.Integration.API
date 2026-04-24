@@ -9,7 +9,8 @@ builder.Services.AddControllers();
 // Register CRM Connector
 builder.Services.AddScoped<CRMConnector>();
 builder.Services.AddScoped<EstablishmentService>();
-
+builder.Services.AddScoped<EventService>();
+builder.Services.AddScoped<NocService>();
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
